@@ -1,0 +1,13 @@
+{
+	"include": ["."],
+	"exclude": [".import"],
+	"compilerOptions": {
+		"rootDir": ".",
+		"target": "ESNext",
+		"module": "ESNext",
+		"lib": ["ESNext"],
+		"experimentalDecorators": true,
+		"jsx": "preserve"
+	}
+}
+
