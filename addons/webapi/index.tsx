@@ -3,20 +3,22 @@ if (typeof window === 'undefined') {
 }
 
 interface WebAPIModule {
-	initialize: Function;
-	uninitialize: Function;
-	exports: Record<string, any>
+	initialize?: Function;
+	uninitialize?: Function;
+	exports?: Record<string, any>
 }
 
 import Timer from './Timer';
-const modules: WebAPIModule[] = [ Timer ];
+import misc from './misc';
+const modules: WebAPIModule[] = [ Timer, misc ];
 
-export default class _ extends godot.Node {
+export default class WebAPIBinder extends godot.Node {
 	constructor() {
 		super();
 		for (const m of modules) {
-			m?.initialize();
-			for (const key in m?.exports) {
+			if (m.initialize) m.initialize();
+			if (!m.exports) continue;
+			for (const key in m.exports) {
 				Object.defineProperty(window, key, { value: m.exports[key] });
 			}
 		}
@@ -24,7 +26,7 @@ export default class _ extends godot.Node {
 
 	_exit_tree() {
 		for (const m of modules) {
-			m?.uninitialize();
+			if (m.uninitialize) m.uninitialize();
 		}
 	}
 }
