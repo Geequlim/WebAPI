@@ -1,7 +1,7 @@
 //@ts-ignore
 declare module globalThis {
 	/** This Web Storage API interface provides access to a particular domain's session or local storage. It allows, for example, the addition, modification, or deletion of stored data items. */
-	interface Storage {
+	class Storage {
 		/**
 		* Returns the number of key/value pairs currently present in the list associated with the object.
 		*/
@@ -30,11 +30,6 @@ declare module globalThis {
 		setItem(key: string, value: string): void;
 		[name: string]: any;
 	}
-
-	var Storage: {
-		prototype: Storage;
-		new(): Storage;
-	};
 
 	const localStorage: Storage;
 	const sessionStorage: Storage;

@@ -4,7 +4,7 @@ declare module globalThis {
 	type PerformanceEntryList = PerformanceEntry[];
 
 	/** Provides access to performance-related information for the current page. It's part of the High Resolution Time API, but is enhanced by the Performance Timeline API, the Navigation Timing API, the User Timing API, and the Resource Timing API. */
-	interface Performance {
+	class Performance {
 		readonly timeOrigin: number;
 		/** Removes the given mark from the performance entry buffer. */
 		clearMarks(markName: string): void;
@@ -26,37 +26,20 @@ declare module globalThis {
 		toJSON(): { timeOrigin : number };
 	}
 
-	var Performance: {
-		prototype: Performance;
-		new(): Performance;
-	};
-
 	/** Encapsulates a single performance metric that is part of the performance timeline. A performance entry can be directly created by making a performance mark or measure (for example by calling the mark() method) at an explicit point in an application. Performance entries are also created in indirect ways such as loading a resource (such as an image). */
-	interface PerformanceEntry {
+	class PerformanceEntry {
 		readonly duration: number;
 		readonly entryType: string;
 		readonly name: string;
 		readonly startTime: number;
 		toJSON(): { duration: number; entryType: string; name: string; startTime: number; };
 	}
-	var PerformanceEntry: {
-		prototype: PerformanceEntry;
-		new(): PerformanceEntry;
-	};
 
 	/** PerformanceMark is an abstract interface for PerformanceEntry objects with an entryType of "mark". Entries of this type are created by calling performance.mark() to add a named DOMHighResTimeStamp (the mark) to the browser's performance timeline. */
-	interface PerformanceMark extends PerformanceEntry {}
-	var PerformanceMark: {
-		prototype: PerformanceMark;
-		new(): PerformanceMark;
-	};
+	class PerformanceMark extends PerformanceEntry {}
 
 	/** PerformanceMeasure is an abstract interface for PerformanceEntry objects with an entryType of "measure". Entries of this type are created by calling performance.measure() to add a named DOMHighResTimeStamp (the measure) between two marks to the browser's performance timeline. */
-	interface PerformanceMeasure extends PerformanceEntry {}
-	var PerformanceMeasure: {
-		prototype: PerformanceMeasure;
-		new(): PerformanceMeasure;
-	};
-
+	class PerformanceMeasure extends PerformanceEntry {}
+	
 	const performance: Performance;
 }
