@@ -16,6 +16,8 @@ Minimal Web API support for godot
 	- btoa
 	- atob
 	- performance
+	- localStorage
+	- sessionStorage
 - Performance API
 	- timeOrigin
 	- clearMarks
@@ -27,3 +29,10 @@ Minimal Web API support for godot
 	- measure
 	- now
 	- toJSON
+- Storage API
+	- length
+	- clear
+	- getItem
+	- key
+	- removeItem
+	- setItem

@@ -9,9 +9,10 @@ interface WebAPIModule {
 }
 
 import timer from './timer';
-import misc from './misc';
 import performance from './performance';
-const modules: WebAPIModule[] = [ timer, misc, performance ];
+import storage from './storage';
+import misc from './misc';
+const modules: WebAPIModule[] = [ timer, performance, storage, misc];
 
 export default class WebAPIBinder extends godot.Node {
 	constructor() {
