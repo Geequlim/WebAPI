@@ -8,9 +8,22 @@ Minimal Web API support for godot
 - Add `addons/webapi/index.jsx` as an `autoload` to your project
 
 ### Implemented Web APIs
-- setTimeout
-- clearTimeout
-- setInterval
-- clearInterval
-- btoa
-- atob
+- WindowOrWorkerGlobalScope
+	- setTimeout
+	- clearTimeout
+	- setInterval
+	- clearInterval
+	- btoa
+	- atob
+	- performance
+- Performance API
+	- timeOrigin
+	- clearMarks
+	- clearMeasures
+	- getEntries
+	- getEntriesByName
+	- getEntriesByType
+	- mark
+	- measure
+	- now
+	- toJSON
