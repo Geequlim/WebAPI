@@ -8,11 +8,13 @@ interface WebAPIModule {
 	exports?: Record<string, any>
 }
 
+import event from './event';
 import timer from './timer';
 import performance from './performance';
 import storage from './storage';
+import xhr from './xhr/xhr';
 import misc from './misc';
-const modules: WebAPIModule[] = [ timer, performance, storage, misc];
+const modules: WebAPIModule[] = [ event, timer, performance, storage, xhr, misc];
 
 export default class WebAPIBinder extends godot.Node {
 	constructor() {

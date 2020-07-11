@@ -1,3 +1,6 @@
 *.js
 *.jsx
 .import
+!addons/webapi/xhr/thirdpart/**/*.js
+log/
+types/

@@ -19,20 +19,7 @@ Minimal Web API support for godot
 	- localStorage
 	- sessionStorage
 - Performance API
-	- timeOrigin
-	- clearMarks
-	- clearMeasures
-	- getEntries
-	- getEntriesByName
-	- getEntriesByType
-	- mark
-	- measure
-	- now
-	- toJSON
 - Storage API
-	- length
-	- clear
-	- getItem
-	- key
-	- removeItem
-	- setItem
+- Event
+- EventTarget
+- XMLHttpRequest
