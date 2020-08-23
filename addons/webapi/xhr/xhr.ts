@@ -389,8 +389,10 @@ class GodotXMLHttpRequest extends XMLHttpRequest {
 			const headers: string[] = [];
 			let body: string = '';
 			if (typeof task.body === 'object') {
-				this.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
-				body = querystring.encode(task.body);
+				// this.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+				// body = querystring.encode(task.body);
+				this.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+				body = JSON.stringify(task.body);
 			} else if (task.body === 'string') {
 				body = task.body;
 				if (!('Content-Type' in this._request_headers)) {
