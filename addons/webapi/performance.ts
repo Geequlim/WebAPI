@@ -12,7 +12,7 @@ class PerformanceEntry {
 		this.name = name;
 		this.entryType = entryType;
 		this.duration = duration;
-	} 
+	}
 
 	toJSON() {
 		return {
@@ -37,7 +37,7 @@ class Performance extends EventTarget {
 
 	constructor() {
 		super();
-		this.timeOrigin = this.now();
+		this.timeOrigin = Date.now();
 	}
 
 	getEntries(): PerformanceEntryList {
@@ -65,12 +65,8 @@ class Performance extends EventTarget {
 		return this._entries.get(type);
 	}
 
-	now(): number {
-		return godot.OS.get_ticks_usec() / 1000;
-	}
-
 	mark(markName: string) {
-		const mark = new PerformanceMark(markName, this.now(), MARK_TYPE);
+		const mark = new PerformanceMark(markName, getHighResTimeStamp(), MARK_TYPE);
 		let marks: PerformanceEntryList = this._entries.get(MARK_TYPE);
 		if (!marks) {
 			marks = [ mark ];

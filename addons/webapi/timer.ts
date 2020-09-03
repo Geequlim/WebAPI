@@ -13,12 +13,8 @@ const pending_timers = new Map<number, Timer>();
 const processing_timers = new Map<number, Timer>();
 const removing_timers = new Set<number>();
 
-function ticks(): number {
-	return godot.OS.get_ticks_msec();
-}
-
 function timer_loop(){
-	const now = ticks();
+	const now = getHighResTimeStamp();
 
 	for (const [id, timer] of pending_timers) {
 		processing_timers.set(id, timer);
@@ -29,10 +25,10 @@ function timer_loop(){
 		processing_timers.delete(id);
 	}
 	removing_timers.clear();
-	
+
 	for (const [id, timer] of processing_timers) {
 		if (timer.next_time <= now) {
-			timer.handler?.apply(null, timer.args);
+			if (timer.handler) timer.handler.apply(null, timer.args);
 			if (timer.oneshot) {
 				removing_timers.add(id);
 			} else {
@@ -46,7 +42,7 @@ function make_timer(handler: TimerHandler, timeout?: number, ...args: any[]): Ti
 	return {
 		handler,
 		timeout,
-		next_time: ticks() + (timeout || 0),
+		next_time: getHighResTimeStamp() + (timeout || 0),
 		args
 	};
 }
@@ -74,10 +70,12 @@ function clearInterval(handle?: number): void {
 	removing_timers.add(handle);
 }
 
-const timer_loop_id = requestAnimationFrame(timer_loop);
+let timer_loop_id = 0;
 
 export default {
-	initialize() {},
+	initialize() {
+		timer_loop_id = requestAnimationFrame(timer_loop);
+	},
 	uninitialize() {
 		cancelAnimationFrame(timer_loop_id);
 	},

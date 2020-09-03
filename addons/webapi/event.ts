@@ -29,9 +29,11 @@ export class Event {
 
 	constructor(type: string, eventInitDict?: EventInit) {
 		this._type = type;
-		this._bubbles = eventInitDict?.bubbles;
-		this._cancelable = eventInitDict?.cancelable;
-		this._composed = eventInitDict?.composed;
+		if (eventInitDict) {
+			this._bubbles = eventInitDict.bubbles;
+			this._cancelable = eventInitDict.cancelable;
+			this._composed = eventInitDict.composed;
+		}
 	}
 
 	/**
