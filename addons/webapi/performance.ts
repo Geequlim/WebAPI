@@ -66,7 +66,7 @@ class Performance extends EventTarget {
 	}
 
 	mark(markName: string) {
-		const mark = new PerformanceMark(markName, getHighResTimeStamp(), MARK_TYPE);
+		const mark = new PerformanceMark(markName, WebAPI.getHighResTimeStamp(), MARK_TYPE);
 		let marks: PerformanceEntryList = this._entries.get(MARK_TYPE);
 		if (!marks) {
 			marks = [ mark ];

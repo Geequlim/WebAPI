@@ -14,7 +14,7 @@ const processing_timers = new Map<number, Timer>();
 const removing_timers = new Set<number>();
 
 function timer_loop(){
-	const now = getHighResTimeStamp();
+	const now = WebAPI.getHighResTimeStamp();
 
 	for (const [id, timer] of pending_timers) {
 		processing_timers.set(id, timer);
@@ -42,7 +42,7 @@ function make_timer(handler: TimerHandler, timeout?: number, ...args: any[]): Ti
 	return {
 		handler,
 		timeout,
-		next_time: getHighResTimeStamp() + (timeout || 0),
+		next_time: WebAPI.getHighResTimeStamp() + (timeout || 0),
 		args
 	};
 }

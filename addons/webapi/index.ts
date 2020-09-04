@@ -5,31 +5,10 @@ interface WebAPIModule {
 	exports?: Record<string, any>
 }
 
-import animation_frame from './animation_frame';
-import event from './event';
-import timer from './timer';
-import performance from './performance';
+let registered_modules: WebAPIModule[] = [];
 
-// import storage from './storage';
-// import xhr from './xhr/xhr';
-// import misc from './misc';
-
-const modules: WebAPIModule[] = [animation_frame, event, timer, performance, /*storage, xhr, misc */ ];
-
-let now = () => Date.now();
-function setHighResTimeStampProvider(func: ()=>number) {
-	if (typeof func === 'function') {
-		now = func;
-	}
-}
-function getHighResTimeStamp() {
-	return now();
-}
-
-export function initialize() {
+export function initialize(modules: WebAPIModule[]) {
 	Object.defineProperty(globalThis, 'window', { value: globalThis });
-	Object.defineProperty(globalThis, 'setHighResTimeStampProvider', { value: setHighResTimeStampProvider});
-	Object.defineProperty(globalThis, 'getHighResTimeStamp', { value: getHighResTimeStamp});
 	for (const m of modules) {
 		if (m.initialize) m.initialize();
 		if (!m.exports) continue;
@@ -37,16 +16,25 @@ export function initialize() {
 			Object.defineProperty(window, key, { value: m.exports[key] });
 		}
 	}
+	registered_modules = modules;
 }
 
-export function unintialize() {
-	for (const m of modules) {
+export function finalize() {
+	for (const m of registered_modules) {
 		if (m.uninitialize) m.uninitialize();
 	}
 }
 
 export function tick() {
-	for (const m of modules) {
-		if (m.tick) m.tick(now());
+	for (const m of registered_modules) {
+		if (m.tick && WebAPI.getHighResTimeStamp) {
+			m.tick(WebAPI.getHighResTimeStamp());
+		}
 	}
 }
+
+Object.defineProperty(globalThis, "WebAPI", { value: {
+	tick,
+	finalize,
+	getHighResTimeStamp: Date.now,
+}});
