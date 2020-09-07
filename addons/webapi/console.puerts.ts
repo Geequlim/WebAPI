@@ -37,10 +37,25 @@ function print(type: LogType, showStack : boolean, ...args) {
 	UnityEngine.Debug.LogFormat(type, UnityEngine.LogOption.NoStacktrace, unity_log_target, message);
 }
 
-let globalConsole = (globalThis as unknown)['console'];
-Object.defineProperty(globalConsole, 'log', { value: (...args) => print(LogType.Log, false, ...args), enumerable: true, configurable: true});
-Object.defineProperty(globalConsole, 'info', { value: (...args) => print(LogType.Log, true, ...args), enumerable: true, configurable: true});
-Object.defineProperty(globalConsole, 'trace', { value: (...args) => print(LogType.Log, true, ...args), enumerable: true, configurable: true});
-Object.defineProperty(globalConsole, 'warn', { value: (...args) => print(LogType.Warning, true, ...args), enumerable: true, configurable: true});
-Object.defineProperty(globalConsole, 'error', { value: (...args) => print(LogType.Error, true, ...args), enumerable: true, configurable: true});
-Object.defineProperty(globalConsole, 'LOG_OBJECT_TO_JSON', { value: false, enumerable: true, configurable: true, writable: true});
+const ConsoleObject = {
+	log: (...args) => print(LogType.Log, false, ...args),
+	info: (...args) => print(LogType.Log, true, ...args),
+	trace: (...args) => print(LogType.Log, true, ...args),
+	warn: (...args) => print(LogType.Warning, true, ...args),
+	error: (...args) => print(LogType.Error, true, ...args),
+	LOG_OBJECT_TO_JSON: false,
+};
+
+if (typeof(console) === 'undefined') {
+	Object.defineProperty(globalThis, 'console', {
+		value: ConsoleObject,
+		enumerable: true,
+		configurable: true,
+		writable: false
+	});
+} else {
+	let globalConsole = (globalThis as unknown)['console'];
+	for (const key in ConsoleObject) {
+		Object.defineProperty(globalConsole, key, { value: ConsoleObject[key], enumerable: true, configurable: true, writable: typeof(ConsoleObject[key]) !== 'function' });
+	}
+}
