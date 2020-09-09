@@ -1,4 +1,5 @@
-import { UnityEngine } from 'csharp';
+import { UnityEngine, UnityEditor } from 'csharp';
+import { $typeof } from 'puerts';
 enum LogType {
 	Error = 0,
 	Assert = 1,
@@ -7,7 +8,9 @@ enum LogType {
 	Exception = 4
 }
 
-let unity_log_target = null;
+const scriptResources = new Map<string, UnityEngine.Object>();
+const emptyResources = new UnityEngine.Object();
+const isUnityEditor = UnityEngine.Application.isEditor;
 
 function print(type: LogType, showStack : boolean, ...args) {
 	let message = '';
@@ -22,19 +25,34 @@ function print(type: LogType, showStack : boolean, ...args) {
 			message += ' ';
 		}
 	}
-
+	let unityLogTarget: UnityEngine.Object = null;
 	if (showStack || UnityEngine.Application.isEditor) {
 		var stacks = new Error().stack.split('\n');
 		for (let i = 3; i < stacks.length; i++) {
-			const line = stacks[i];
+			let line = stacks[i];
 			message += '\n';
+			if (isUnityEditor) {
+				const matches = line.match(/at\s.*?\s\((.*?)\:(\d+)/);
+				if (matches && matches.length >= 3) {
+					let file = matches[1].replace(/\\/g, '/');
+					file = file.replace(/.*\/Assets\//, 'Assets/');
+					const lineNumber = matches[2];
+					line = line.replace(/\s\(/, ` (<a href="${file}" line="${lineNumber}">`);
+					line = line.replace(/\)$/, ' </a>)');
+					if (!unityLogTarget) {
+						if (!scriptResources.has(file)) {
+							scriptResources.set(file, UnityEditor.AssetDatabase.LoadAssetAtPath(file, $typeof(UnityEngine.Object)));
+						}
+						unityLogTarget = scriptResources.get(file);
+					}
+				}
+			}
 			message += line;
 		}
 	}
 	message = message.replace(/{/gm, '{{');
 	message = message.replace(/}/gm, '}}');
-	if (!unity_log_target) { unity_log_target = new UnityEngine.Object(); }
-	UnityEngine.Debug.LogFormat(type, UnityEngine.LogOption.NoStacktrace, unity_log_target, message);
+	UnityEngine.Debug.LogFormat(type, UnityEngine.LogOption.NoStacktrace, unityLogTarget || emptyResources, message);
 }
 
 const ConsoleObject = {

@@ -153,8 +153,6 @@ export class ProgressEvent<T extends EventTarget = EventTarget> extends Event {
 	get loaded(): number { return this._loaded; }
 	protected _loaded: number;
 
-	get target(): T { return this._target; }
-	protected _target: T;
 	get total(): number { return this._total; }
 	protected _total: number;
 
@@ -235,7 +233,7 @@ export class EventTarget {
 
 		const recorders = origin_recorders.slice();
 		if (!recorders.length) return !event.defaultPrevented;
-
+		event['_target'] = this;
 		let once_listeners: EventListenerRecord[] = [];
 		for (const recorder of recorders) {
 			let listener: EventListener = null;
