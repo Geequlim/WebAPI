@@ -1,7 +1,7 @@
 //@ts-ignore
 declare module globalThis {
 	type XMLHttpRequestResponseType = "" | "arraybuffer" | "blob" | "document" | "json" | "text";
-	type XMLHttpRequestMethod = "GET" | "POST" | "DELETE";
+	type XMLHttpRequestMethod = "GET" | "POST" | "DELETE" | "PUT";
 	type BodyInit = string | Record<string, any>;
 
 	interface XMLHttpRequestEventTargetEventMap {
@@ -39,7 +39,7 @@ declare module globalThis {
 		LOADING = 3,
 		DONE = 4
 	}
-	
+
 	/** Use XMLHttpRequest (XHR) objects to interact with servers. You can retrieve data from a URL without having to do a full page refresh. This enables a Web page to update just part of a page without disrupting what the user is doing. */
 	class XMLHttpRequest extends XMLHttpRequestEventTarget {
 		onreadystatechange: ((this: XMLHttpRequest, ev: Event) => any) | null;

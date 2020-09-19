@@ -35,6 +35,10 @@ class Performance extends EventTarget {
 	readonly timeOrigin: number;
 	private _entries = new Map<string, PerformanceEntryList>();
 
+	now() {
+		return Date.now() - this.timeOrigin;
+	}
+
 	constructor() {
 		super();
 		this.timeOrigin = Date.now();
@@ -66,7 +70,7 @@ class Performance extends EventTarget {
 	}
 
 	mark(markName: string) {
-		const mark = new PerformanceMark(markName, WebAPI.getHighResTimeStamp(), MARK_TYPE);
+		const mark = new PerformanceMark(markName, this.now(), MARK_TYPE);
 		let marks: PerformanceEntryList = this._entries.get(MARK_TYPE);
 		if (!marks) {
 			marks = [ mark ];
